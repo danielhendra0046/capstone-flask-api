@@ -1,23 +1,17 @@
-import json
-from flask import Flask, jsonify, request
-import pandas as pd
-import numpy as np
-import tensorflow as tf
-import data_prep
+from flask import Flask
+from util import Preprocessing
 
-
+preprocess = Preprocessing("model.h5")
 app = Flask(__name__)
 
-employees = [
-  { 'id': 1, 'name': 'Mary' },
-  { 'id': 2, 'name': 'Harry' },
-  { 'id': 3, 'name': 'Sally' }
-]
-data = pd.read_csv("Groceries_dataset.csv")
-
+@app.route('/', methods=['GET'])
+def index():
+    return "Hello World"
+  
 @app.route('/predict', methods=['GET'])
 def predict():
-  model = tf.keras.models.load_model("model.h5")
-  return model
+  return preprocess.predict()
 
-app.run()
+
+if __name__ == '__main__':
+    app.run(port=3000)
